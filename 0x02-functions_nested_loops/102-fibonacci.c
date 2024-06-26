@@ -1,31 +1,26 @@
 #include <stdio.h>
 
 /**
- * main - Prints the sum of the Fibonacci numbers
+ *main - Prints the add of the Fibonacci numbers
  *
- * Return: Always 0
+ * Return: Always 0.
  */
 int main(void)
 {
-	long int a = 1, b = 2, c, sum = 3;
-	int i;
+	int c;
+	long int n1, n2, fn;
 
-	printf("%ld, %ld, ", a, b);
-
-	for (i = 0; i < 47; i++)
+	n1 = 1;
+	n2 = 2;
+	printf("%ld, %ld", n1, n2);
+	for (c = 0; c < 48; c++)
 	{
-		c = a + b;
-		printf("%ld", c);
-		sum += c;
-		a = b;
-		b = c;
-
-		if (i < 46)
-			printf(", ");
+		fn = n1 + n2;
+		printf(", %ld", fn);
+		n1 = n2;
+		n2 = fn;
 	}
-
 	printf("\n");
-	printf("Sum: %ld\n", sum);
-
 	return (0);
 }
+
