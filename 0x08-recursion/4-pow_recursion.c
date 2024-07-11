@@ -1,24 +1,47 @@
 #include "main.h"
+
 /**
-  * _pow_recursion - function name
-  * @x: parameter 1
-  * @y: parameter 2
-  * Return: value of a given number passed to the function
-  */
 
 
-int _pow_recursion(int x, int y)
+* factorial - gets factorial of n
+
+
+* @n: integer
+
+
+*
+
+
+* Return: On success 1.
+
+
+* On error, -1 is returned, and errno is set appropriately.
+
+
+*/
+
+
+int factorial(int n)
+
+
 {
 
-if (y < 0)
-        return (-1);
 
-else if (y == 0)
-        return (1);
+	if (n < 0)
 
-else
-        return (x * _pow_recursion(x, (y - 1)));
 
-return (0);
+		return (-1);
+
+
+	if (n == 0)
+
+
+		return (1);
+
+
+	return (n * factorial(n - 1));
+
+
 }
+
 
