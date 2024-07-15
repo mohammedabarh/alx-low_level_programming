@@ -1,125 +1,79 @@
+
 #include <stdlib.h>
-#include <stddef.h>
+#include "main.h"
 
 /**
- * count_words - helper function to count the number of words in a string
- * @str: the input string
+ * count_word - helper function to count the number of words in a string
+ * @s: string to evaluate
  *
- * Return: the number of words in the string
+ * Return: number of words
  */
-int count_words(char *str)
+int count_word(char *s)
 {
-	int count = 0, in_word = 0;
+	int flag, c, w;
 
-	while (*str)
+	flag = 0;
+	w = 0;
+
+	for (c = 0; s[c] != '\0'; c++)
 	{
-		if (*str == ' ')
+		if (s[c] == ' ')
+			flag = 0;
+		else if (flag == 0)
 		{
-			in_word = 0;
+			flag = 1;
+			w++;
 		}
-		else if (in_word == 0)
-		{
-			in_word = 1;
-			count++;
-		}
-		str++;
 	}
-	return (count);
-}
 
+	return (w);
+}
 /**
- * get_word_length - helper function to get the length of a word
- * @str: the input string
+ * **strtow - splits a string into words
+ * @str: string to split
  *
- * Return: the length of the word
- */
-int get_word_length(char *str)
-{
-	int len = 0;
-
-	while (str[len] && str[len] != ' ')
-		len++;
-
-	return (len);
-}
-
-/**
- * allocate_words_array - helper function to allocate memory for the words array
- * @num_words: the number of words
- *
- * Return: a pointer to the allocated memory, or NULL if it fails
- */
-char **allocate_words_array(int num_words)
-{
-	char **words;
-
-	words = malloc((num_words + 1) * sizeof(char *));
-	if (words == NULL)
-		return (NULL);
-
-	return (words);
-}
-
-/**
- * free_words_array - helper function to free the memory of the words array
- * @words: the array of words
- * @num_words: the number of words to free
- */
-void free_words_array(char **words, int num_words)
-{
-	for (int i = 0; i < num_words; i++)
-		free(words[i]);
-	free(words);
-}
-
-/**
- * strtow - splits a string into words
- * @str: the input string
- *
- * Return: a pointer to an array of strings (words), or NULL if it fails
+ * Return: pointer to an array of strings (Success)
+ * or NULL (Error)
  */
 char **strtow(char *str)
 {
-	char **words, *word;
-	int i, j, k, word_len, num_words;
+	char **matrix, *tmp;
+	int i, k = 0, len = 0, words, c = 0, start, end;
 
-	if (str == NULL || *str == '\0')
+	while (*(str + len))
+		len++;
+	words = count_word(str);
+	if (words == 0)
 		return (NULL);
 
-	num_words = count_words(str);
-	if (num_words == 0)
+	matrix = (char **) malloc(sizeof(char *) * (words + 1));
+	if (matrix == NULL)
 		return (NULL);
 
-	words = allocate_words_array(num_words);
-	if (words == NULL)
-		return (NULL);
-
-	i = 0;
-	while (*str)
+	for (i = 0; i <= len; i++)
 	{
-		while (*str == ' ')
-			str++;
-
-		if (*str == '\0')
-			break;
-
-		word_len = get_word_length(str);
-
-		word = malloc((word_len + 1) * sizeof(char));
-		if (word == NULL)
+		if (str[i] == ' ' || str[i] == '\0')
 		{
-			free_words_array(words, i);
-			return (NULL);
+			if (c)
+			{
+				end = i;
+				tmp = (char *) malloc(sizeof(char) * (c + 1));
+				if (tmp == NULL)
+					return (NULL);
+				while (start < end)
+					*tmp++ = str[start++];
+				*tmp = '\0';
+				matrix[k] = tmp - c;
+				k++;
+				c = 0;
+			}
 		}
-
-		for (k = 0; k < word_len; k++)
-			word[k] = str[k];
-		word[k] = '\0';
-
-		words[i] = word;
-		i++;
-		str += word_len;
+		else if (c++ == 0)
+			start = i;
 	}
-	words[i] = NULL;
-	return (words);
+
+	matrix[k] = NULL;
+
+	return (matrix);
 }
+
