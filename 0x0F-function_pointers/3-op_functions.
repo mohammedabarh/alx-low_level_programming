@@ -1,0 +1,82 @@
+#include "3-calc.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+int op_add(int a, int b);
+int op_sub(int a, int b);
+int op_mul(int a, int b);
+int op_div(int a, int b);
+int op_mod(int a, int b);
+
+/**
+ * op_add - Computes the sum of two integers.
+ * @a: The first integer.
+ * @b: The second integer.
+ *
+ * Return: The sum of a and b.
+ */
+int op_add(int a, int b)
+{
+	return (a + b);
+}
+
+/**
+ * op_sub - Computes the difference between two integers.
+ * @a: The first integer.
+ * @b: The second integer.
+ *
+ * Return: The difference between a and b.
+ */
+int op_sub(int a, int b)
+{
+	return (a - b);
+}
+
+/**
+ * op_mul - Computes the product of two integers.
+ * @a: The first integer.
+ * @b: The second integer.
+ *
+ * Return: The product of a and b.
+ */
+int op_mul(int a, int b)
+{
+	return (a * b);
+}
+
+/**
+ * op_div - Computes the division of two integers.
+ * @a: The dividend.
+ * @b: The divisor.
+ *
+ * Return: The quotient of a divided by b.
+ *         Exits with status 100 if b is 0.
+ */
+int op_div(int a, int b)
+{
+	if (b == 0)
+	{
+		fputs("Error\n", stderr);
+		exit(100);
+	}
+	return (a / b);
+}
+
+/**
+ * op_mod - Computes the remainder of the division of two integers.
+ * @a: The dividend.
+ * @b: The divisor.
+ *
+ * Return: The remainder of a divided by b.
+ *         Exits with status 100 if b is 0.
+ */
+int op_mod(int a, int b)
+{
+	if (b == 0)
+	{
+		fputs("Error\n", stderr);
+		exit(100);
+	}
+	return (a % b);
+}
+
