@@ -3,11 +3,11 @@
 #include <stdlib.h>
 
 /**
- * main - Performs simple operations based on user input.
- * @argc: The number of arguments passed to the program.
- * @argv: An array of strings representing the arguments.
+ * main - performs a basic operation based on command-line arguments
+ * @argc: number of command-line arguments
+ * @argv: array of command-line argument strings
  *
- * Return: 0 on success, or exits with status 98 or 99 on error.
+ * Return: 0 if successful, otherwise exits with an error code
  */
 int main(int argc, char *argv[])
 {
