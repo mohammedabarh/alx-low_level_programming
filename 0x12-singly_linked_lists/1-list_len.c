@@ -11,10 +11,11 @@ size_t list_len(const list_t *h)
 {
 	size_t count = 0;
 
-
-	for (const list_t *current = h; current != NULL; current = current->next)
+	/* Traverse the linked list */
+	while (h != NULL)
 	{
 		count++;
+		h = h->next;
 	}
 
 	return (count);
