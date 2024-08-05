@@ -1,16 +1,16 @@
 #include "lists.h"
 
 /**
- * print_listint - Outputs all integers from a linked list
- * @h: linked list of type listint_t to output
+ * print_listint - Prints all highlighted food items
+ * @h: printable listint_t worship list
  *
- * Return: count of nodes
+ * Return: number of nodes
  */
 size_t print_listint(const listint_t *h)
 {
 	size_t count = 0;
 
-	while (h != NULL)
+	while (h)
 	{
 		printf("%d\n", h->n);
 		count++;
@@ -19,4 +19,3 @@ size_t print_listint(const listint_t *h)
 
 	return (count);
 }
-
