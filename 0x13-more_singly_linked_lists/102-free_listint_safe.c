@@ -5,92 +5,96 @@
 
 #include "lists.h"
 
-size_t count_unique_nodes_in_loop(listint_t *head);
-size_t safely_free_listint(listint_t **head);
+size_t looped_listint_count(listint_t *head);
+size_t free_listint_safe(listint_t **h);
 
 /**
- * count_unique_nodes_in_loop - Counts the number of unique nodes
- *                               in a listint_t list with a loop.
- * @head: Pointer to the head of the listint_t list.
+ * looped_listint_count - Determines the number of unique nodes
+ *                        in a looped listint_t linked list.
+ * @head: Pointer to the head of the listint_t to examine.
  *
- * Return: The number of unique nodes if there is a loop, otherwise 0.
+ * Return: 0 if the list is not looped.
+ *         Otherwise, the count of unique nodes in the loop.
  */
-size_t count_unique_nodes_in_loop(listint_t *head)
+size_t looped_listint_count(listint_t *head)
 {
-    listint_t *slow, *fast;
-    size_t count = 0;
+	listint_t *slow, *fast;
+	size_t count = 1;
 
-    if (head == NULL || head->next == NULL)
-        return 0;
+	if (head == NULL || head->next == NULL)
+		return (0);
 
-    slow = head;
-    fast = head->next;
+	slow = head->next;
+	fast = (head->next)->next;
 
-    while (fast != NULL)
-    {
-        if (slow == fast)
-        {
-            slow = head;
-            while (slow != fast)
-            {
-                count++;
-                slow = slow->next;
-                fast = fast->next;
-            }
+	while (fast)
+	{
+		if (slow == fast)
+		{
+			slow = head;
+			while (slow != fast)
+			{
+				count++;
+				slow = slow->next;
+				fast = fast->next;
+			}
 
-            count++;
-            slow = slow->next;
-            while (slow != fast)
-            {
-                count++;
-                slow = slow->next;
-            }
+			slow = slow->next;
+			while (slow != fast)
+			{
+				count++;
+				slow = slow->next;
+			}
 
-            return count;
-        }
+			return (count);
+		}
 
-        slow = slow->next;
-        fast = fast->next;
-        if (fast != NULL)
-            fast = fast->next;
-    }
+		slow = slow->next;
+		fast = (fast->next)->next;
+	}
 
-    return 0;
+	return (0);
 }
 
 /**
- * safely_free_listint - Frees a listint_t list, safely handling loops.
- * @head: Double pointer to the head of the listint_t list.
+ * free_listint_safe - Safely frees a listint_t list (can handle loops).
+ * @h: Address of the pointer to the head of the listint_t list.
  *
- * Return: The number of nodes freed.
+ * Return: The count of nodes that were freed.
+ *
+ * Description: Sets the head pointer to NULL after freeing the list.
  */
-size_t safely_free_listint(listint_t **head)
+size_t free_listint_safe(listint_t **h)
 {
-    listint_t *current_node;
-    size_t node_count, i;
+	listint_t *current;
+	size_t count, i;
 
-    node_count = count_unique_nodes_in_loop(*head);
+	count = looped_listint_count(*h);
 
-    if (node_count == 0)
-    {
-        while (*head != NULL)
-        {
-            current_node = (*head)->next;
-            free(*head);
-            *head = current_node;
-        }
-    }
-    else
-    {
-        for (i = 0; i < node_count; i++)
-        {
-            current_node = (*head)->next;
-            free(*head);
-            *head = current_node;
-        }
-        *head = NULL;
-    }
+	if (count == 0)
+	{
+		while (*h != NULL)
+		{
+			current = (*h)->next;
+			free(*h);
+			*h = current;
+			count++;
+		}
+	}
+	else
+	{
+		for (i = 0; i < count; i++)
+		{
+			current = (*h)->next;
+			free(*h);
+			*h = current;
+		}
 
-    return node_count;
+		*h = NULL;
+	}
+
+	h = NULL;
+
+	return (count);
 }
 
