@@ -5,95 +5,97 @@
 
 #include "lists.h"
 
-size_t count_unique_looped_nodes(listint_t *head);
-size_t safe_free_listint(listint_t **head_ptr);
+size_t looped_listint_count(listint_t *head);
+size_t free_listint_safe(listint_t **h);
 
 /**
- * count_unique_looped_nodes - Counts unique nodes in a looped
- *                              listint_t linked list.
- * @head: Pointer to the start of the listint_t list.
+ * looped_listint_count - Counts the number of unique nodes
+ *                      in a looped listint_t linked list.
+ * @head: A pointer to the head of the listint_t to check.
  *
- * Return: If there is no loop - 0.
- *         Otherwise - number of unique nodes in the looped list.
+ * Return: If the list is not looped - 0.
+ *         Otherwise - the number of unique nodes in the list.
  */
-size_t count_unique_looped_nodes(listint_t *head)
+size_t looped_listint_count(listint_t *head)
 {
-	listint_t *slow, *fast;
-	size_t unique_nodes = 1;
+	listint_t *tortoise, *hare;
+	size_t nodes = 1;
 
 	if (head == NULL || head->next == NULL)
 		return (0);
 
-	slow = head->next;
-	fast = (head->next)->next;
+	tortoise = head->next;
+	hare = (head->next)->next;
 
-	while (fast)
+	while (hare)
 	{
-		if (slow == fast)
+		if (tortoise == hare)
 		{
-			slow = head;
-			while (slow != fast)
+			tortoise = head;
+			while (tortoise != hare)
 			{
-				unique_nodes++;
-				slow = slow->next;
-				fast = fast->next;
+				nodes++;
+				tortoise = tortoise->next;
+				hare = hare->next;
 			}
 
-			slow = slow->next;
-			while (slow != fast)
+			tortoise = tortoise->next;
+			while (tortoise != hare)
 			{
-				unique_nodes++;
-				slow = slow->next;
+				nodes++;
+				tortoise = tortoise->next;
 			}
 
-			return (unique_nodes);
+			return (nodes);
 		}
 
-		slow = slow->next;
-		fast = (fast->next)->next;
+		tortoise = tortoise->next;
+		hare = (hare->next)->next;
 	}
 
 	return (0);
 }
 
 /**
- * safe_free_listint - Frees a listint_t list safely, handling loops.
- * @head_ptr: Pointer to the address of the head of the listint_t list.
+ * free_listint_safe - Frees a listint_t list safely (ie.
+ *                     can free lists containing loops)
+ * @h: A pointer to the address of
+ *     the head of the listint_t list.
  *
- * Return: Number of nodes that were freed.
+ * Return: The size of the list that was freed.
  *
- * Description: Function sets the head pointer to NULL.
+ * Description: The function sets the head to NULL.
  */
-size_t safe_free_listint(listint_t **head_ptr)
+size_t free_listint_safe(listint_t **h)
 {
-	listint_t *current_node;
-	size_t total_nodes, i;
+	listint_t *tmp;
+	size_t nodes, index;
 
-	total_nodes = count_unique_looped_nodes(*head_ptr);
+	nodes = looped_listint_count(*h);
 
-	if (total_nodes == 0)
+	if (nodes == 0)
 	{
-		while (*head_ptr != NULL)
+		for (; h != NULL && *h != NULL; nodes++)
 		{
-			current_node = (*head_ptr)->next;
-			free(*head_ptr);
-			*head_ptr = current_node;
+			tmp = (*h)->next;
+			free(*h);
+			*h = tmp;
 		}
 	}
+
 	else
 	{
-		for (i = 0; i < total_nodes; i++)
+		for (index = 0; index < nodes; index++)
 		{
-			current_node = (*head_ptr)->next;
-			free(*head_ptr);
-			*head_ptr = current_node;
+			tmp = (*h)->next;
+			free(*h);
+			*h = tmp;
 		}
 
-		*head_ptr = NULL;
+		*h = NULL;
 	}
 
-	head_ptr = NULL;
+	h = NULL;
 
-	return (total_nodes);
+	return (nodes);
 }
-
