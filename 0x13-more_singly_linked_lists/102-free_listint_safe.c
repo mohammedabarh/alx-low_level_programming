@@ -1,3 +1,8 @@
+/*
+ * File: 102-free_listint_safe.c
+ * Auth: Gedeon Obae Gekonge
+ */
+
 #include "lists.h"
 
 size_t count_unique_nodes_in_loop(listint_t *head);
