@@ -1,8 +1,3 @@
-/*
- * File: 102-free_listint_safe.c
- * Auth: Gedeon Obae Gekonge
- */
-
 #include "lists.h"
 
 size_t looped_listint_count(listint_t *head);
