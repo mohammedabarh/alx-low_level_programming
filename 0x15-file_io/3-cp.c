@@ -1,24 +1,26 @@
 #include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-char *allocate_buffer(void);
-void close_file_descriptor(int fd);
+char *allocate_buffer(size_t size);
+void handle_close(int fd);
 
 /**
- * allocate_buffer - Allocates a buffer of 1024 bytes.
+ * allocate_buffer - Allocates a buffer of specified size.
+ * @size: Size of the buffer to be allocated.
  *
  * Return: A pointer to the allocated buffer.
  */
-char *allocate_buffer(void)
+char *allocate_buffer(size_t size)
 {
 	char *buffer;
 
-	buffer = malloc(1024);
-
+	buffer = malloc(size);
 	if (buffer == NULL)
 	{
-		dprintf(STDERR_FILENO, "Error: Unable to allocate buffer\n");
+		dprintf(STDERR_FILENO, "Error: Can't allocate memory\n");
 		exit(99);
 	}
 
@@ -26,33 +28,32 @@ char *allocate_buffer(void)
 }
 
 /**
- * close_file_descriptor - Closes a file descriptor.
- * @fd: The file descriptor to close.
+ * handle_close - Closes a file descriptor and handles errors.
+ * @fd: The file descriptor to be closed.
  */
-void close_file_descriptor(int fd)
+void handle_close(int fd)
 {
 	if (close(fd) == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Unable to close file descriptor %d\n", fd);
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
 		exit(100);
 	}
 }
 
 /**
  * main - Copies content from one file to another.
- * @argc: The number of command line arguments.
- * @argv: An array of pointers to the arguments.
+ * @argc: Number of command-line arguments.
+ * @argv: Array of command-line arguments.
  *
  * Return: 0 on success.
  *
- * Description: Exits with code 97 if the argument count is incorrect.
- * Exits with code 98 if the source file cannot be read.
- * Exits with code 99 if the destination file cannot be written to.
- * Exits with code 100 if file descriptors cannot be closed.
+ * Description: Exits with code 97 for incorrect argument count,
+ * 98 for file read errors, 99 for file write errors, and 100
+ * for file close errors.
  */
 int main(int argc, char *argv[])
 {
-	int from_fd, to_fd, bytes_read, bytes_written;
+	int src_fd, dest_fd, bytes_read, bytes_written;
 	char *buffer;
 
 	if (argc != 3)
@@ -61,34 +62,34 @@ int main(int argc, char *argv[])
 		exit(97);
 	}
 
-	buffer = allocate_buffer();
+	buffer = allocate_buffer(1024);
 
-	from_fd = open(argv[1], O_RDONLY);
-	if (from_fd == -1)
+	src_fd = open(argv[1], O_RDONLY);
+	if (src_fd == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		free(buffer);
 		exit(98);
 	}
 
-	to_fd = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	if (to_fd == -1)
+	dest_fd = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	if (dest_fd == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-		close_file_descriptor(from_fd);
 		free(buffer);
+		handle_close(src_fd);
 		exit(99);
 	}
 
-	while ((bytes_read = read(from_fd, buffer, 1024)) > 0)
+	while ((bytes_read = read(src_fd, buffer, 1024)) > 0)
 	{
-		bytes_written = write(to_fd, buffer, bytes_read);
+		bytes_written = write(dest_fd, buffer, bytes_read);
 		if (bytes_written != bytes_read)
 		{
 			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-			close_file_descriptor(from_fd);
-			close_file_descriptor(to_fd);
 			free(buffer);
+			handle_close(src_fd);
+			handle_close(dest_fd);
 			exit(99);
 		}
 	}
@@ -98,9 +99,9 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 	}
 
-	close_file_descriptor(from_fd);
-	close_file_descriptor(to_fd);
 	free(buffer);
+	handle_close(src_fd);
+	handle_close(dest_fd);
 
 	return (0);
 }
