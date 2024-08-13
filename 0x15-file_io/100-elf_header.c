@@ -107,7 +107,7 @@ void print_data(unsigned char *e_ident)
         printf("2's complement, big endian\n");
         break;
     default:
-        printf("<unknown: %x>\n", e_ident[EI_CLASS]);
+        printf("<unknown: %x>\n", e_ident[EI_DATA]);
     }
 }
 
@@ -117,8 +117,7 @@ void print_data(unsigned char *e_ident)
  */
 void print_version(unsigned char *e_ident)
 {
-    printf("  Version:                           %d",
-           e_ident[EI_VERSION]);
+    printf("  Version:                           %d", e_ident[EI_VERSION]);
 
     switch (e_ident[EI_VERSION])
     {
@@ -238,7 +237,6 @@ void print_entry(unsigned long int e_entry, unsigned char *e_ident)
 
     if (e_ident[EI_CLASS] == ELFCLASS32)
         printf("%#x\n", (unsigned int)e_entry);
-
     else
         printf("%#lx\n", e_entry);
 }
@@ -261,14 +259,14 @@ void close_elf(int elf)
 
 /**
  * main - Displays the information contained in the
- *        ELF header at the start of an ELF file.
+ * ELF header at the start of an ELF file.
  * @argc: The number of arguments supplied to the program.
  * @argv: An array of pointers to the arguments.
  *
  * Return: 0 on success.
  *
  * Description: If the file is not an ELF File or
- *              the function fails - exit code 98.
+ * the function fails - exit code 98.
  */
 int main(int __attribute__((__unused__)) argc, char *argv[])
 {
