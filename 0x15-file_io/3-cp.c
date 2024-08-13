@@ -6,7 +6,7 @@ char *create_buffer(char *file);
 void close_file(int fd);
 
 /**
- * create_buffer - Allocates memory for a buffer.
+ * create_buffer - Allocates a buffer of specified size.
  * @file: Name of the file the buffer is for.
  *
  * Return: Pointer to the allocated buffer.
@@ -45,16 +45,15 @@ void close_file(int fd)
 }
 
 /**
- * main - Copies file contents to another file.
- * @argc: Number of arguments provided.
- * @argv: Array of argument strings.
+ * main - Copies content from one file to another.
+ * @argc: Number of command-line arguments.
+ * @argv: Array of command-line arguments.
  *
  * Return: 0 on success.
  *
- * Description: Exits with code 97 for incorrect argument count.
- * Exits with code 98 if file_from can't be read.
- * Exits with code 99 if file_to can't be created or written to.
- * Exits with code 100 if files can't be closed.
+ * Description: Exits with code 97 for incorrect argument count,
+ * 98 for file read errors, 99 for file write errors, and 100
+ * for file close errors.
  */
 int main(int argc, char *argv[])
 {
