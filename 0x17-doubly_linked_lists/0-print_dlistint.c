@@ -1,29 +1,32 @@
-#include "lists.h"
+#ifndef _LISTS_
+#define _LISTS_
+
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
- * print_dlistint - Prints all the elements of a dlistint_t list.
- * @h: Head of the list.
+ * struct dlistint_s - doubly linked list
+ * @n: integer
+ * @prev: points to the previous node
+ * @next: points to the next node
  *
- * Return: The number of nodes.
+ * Description: doubly linked list node structure
+ * for Holberton project
  */
-size_t print_dlistint(const dlistint_t *h)
+typedef struct dlistint_s
 {
-    size_t count = 0;  /* Use size_t for count */
+	int n;
+	struct dlistint_s *prev;
+	struct dlistint_s *next;
+} dlistint_t;
 
-    if (h == NULL)
-        return (count);
-
-    /* Move to the head of the list if not already there */
-    while (h->prev != NULL)
-        h = h->prev;
-
-    /* Traverse and print the list */
-    while (h != NULL)
-    {
-        printf("%d\n", h->n);
-        count++;
-        h = h->next;
-    }
-
-    return (count);
-}
+size_t print_dlistint(const dlistint_t *h);
+size_t dlistint_len(const dlistint_t *h);
+dlistint_t *add_dnodeint(dlistint_t **head, const int n);
+dlistint_t *add_dnodeint_end(dlistint_t **head, const int n);
+void free_dlistint(dlistint_t *head);
+dlistint_t *get_dnodeint_at_index(dlistint_t *head, unsigned int index);
+int sum_dlistint(dlistint_t *head);
+dlistint_t *insert_dnodeint_at_index(dlistint_t **h, unsigned int idx, int n);
+int delete_dnodeint_at_index(dlistint_t **head, unsigned int index);
+#endif
