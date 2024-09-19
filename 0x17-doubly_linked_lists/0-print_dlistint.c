@@ -1,32 +1,31 @@
-#ifndef _LISTS_
-#define _LISTS_
-
-#include <stdio.h>
-#include <stdlib.h>
+#include "lists.h"
 
 /**
- * struct dlistint_s - doubly linked list
- * @n: integer
- * @prev: points to the previous node
- * @next: points to the next node
+ * print_dlistint - prints all the elements of a dlistint_t list
  *
- * Description: doubly linked list node structure
- * for Holberton project
+ * @h: pointer to the head of the list
+ * Return: the number of nodes in the list
  */
-typedef struct dlistint_s
+size_t print_dlistint(const dlistint_t *h)
 {
-	int n;
-	struct dlistint_s *prev;
-	struct dlistint_s *next;
-} dlistint_t;
+    size_t count = 0;
+    const dlistint_t *current = h;
 
-size_t print_dlistint(const dlistint_t *h);
-size_t dlistint_len(const dlistint_t *h);
-dlistint_t *add_dnodeint(dlistint_t **head, const int n);
-dlistint_t *add_dnodeint_end(dlistint_t **head, const int n);
-void free_dlistint(dlistint_t *head);
-dlistint_t *get_dnodeint_at_index(dlistint_t *head, unsigned int index);
-int sum_dlistint(dlistint_t *head);
-dlistint_t *insert_dnodeint_at_index(dlistint_t **h, unsigned int idx, int n);
-int delete_dnodeint_at_index(dlistint_t **head, unsigned int index);
-#endif
+    /* Return zero if the list is empty */
+    if (!current)
+        return (count);
+
+    /* Navigate to the head of the list */
+    while (current->prev)
+        current = current->prev;
+
+    /* Print each node's data and count nodes */
+    for (; current; current = current->next)
+    {
+        printf("%d\n", current->n);
+        count++;
+    }
+
+    return (count);
+}
+
