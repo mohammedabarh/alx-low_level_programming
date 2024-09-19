@@ -4,18 +4,18 @@
  * print_dlistint - Prints all the elements of a dlistint_t list
  * @h: Pointer to the head of the list
  *
- * Return: The number of N in the list
+ * Return: The number of nodes in the list
  */
 size_t print_dlistint(const dlistint_t *h)
 {
-	const dlistint_t *N = h;
+	
 	size_t node_count = 0;
 
-	while (N)
+	while (h)
 	{
-		printf("%i\n", N->n);
+		printf("%i\n", h->n);
 		cont++;
-		N = N->next;
+		h = h->next;
 	}
 
 	return (node_count);
