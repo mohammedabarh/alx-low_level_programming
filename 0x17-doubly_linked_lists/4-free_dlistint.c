@@ -6,7 +6,7 @@
  */
 void free_dlistint(dlistint_t *head)
 {
-	dlistint_t *ac_node,*node;
+	dlistint_t *ac_node, *node;
 
 	if (head)
 	{
