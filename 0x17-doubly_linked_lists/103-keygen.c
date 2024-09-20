@@ -3,43 +3,72 @@
 #include <string.h>
 
 /**
- * main - Generates and prints passwords for the crackme5 executable.
- * @argc: The number of arguments supplied to the program.
- * @argv: An array of pointers to the arguments.
- *
- * Return: Always 0.
+ * generate_key - Generates a key based on the username
+ * @username: The username to generate the key for
+ * @key: The buffer to store the generated key
+ */
+void generate_key(const char *username, char *key)
+{
+    size_t i, len;
+    int ch;
+    long sum;
+
+    // Initialize key generation
+    key[0] = 'O';
+    key[1] = 'G';
+    key[2] = username[0];
+    key[3] = 'H';
+    key[4] = '0';
+    key[5] = '4';
+
+    // Calculate sum of ASCII values in username
+    len = strlen(username);
+    sum = 0;
+    for (i = 0; i < len; i++)
+        sum += username[i];
+
+    // Set the 6th character based on sum
+    key[6] = ((sum ^ 79) & 63) + 64;
+
+    // Generate the rest of the key
+    ch = 1;
+    for (i = 0; i < len; i++)
+        ch *= username[i];
+    key[7] = ((ch ^ 85) & 63) + 64;
+
+    ch = username[0];
+    for (i = 0; i < len; i++)
+        if (username[i] > ch)
+            ch = username[i];
+    key[8] = ((ch ^ 14) & 63) + 64;
+
+    for (i = 0; i < len; i++)
+        if (username[i] <= ch && username[i] > key[8])
+            key[8] = username[i];
+    key[8] = ((key[8] ^ 34) & 63) + 64;
+
+    // Finalize key
+    key[9] = '\0';
+}
+
+/**
+ * main - Entry point, generates a key for crackme5
+ * @argc: Argument count
+ * @argv: Argument vector
+ * Return: 0 on success, 1 on error
  */
 int main(int argc, char *argv[])
 {
-    unsigned int i, b;
-    size_t len, add;
-    char *l = "A-CHRDw87lNS0E9B2TibgpnMVys5XzvtOGJcYLU+4mjW6fxqZeF3Qa1rPhdKIouk";
-    char p[7] = "      ";
+    char key[10];
 
     if (argc != 2)
     {
-        printf("Correct usage: ./keygen5 username\n");
+        fprintf(stderr, "Usage: %s username\n", argv[0]);
         return (1);
     }
-    len = strlen(argv[1]);
-    p[0] = l[(len ^ 59) & 63];
-    for (i = 0, add = 0; i < len; i++)
-        add += argv[1][i];
-    p[1] = l[(add ^ 79) & 63];
-    for (i = 0, b = 1; i < len; i++)
-        b *= argv[1][i];
-    p[2] = l[(b ^ 85) & 63];
-    for (b = argv[1][0], i = 0; i < len; i++)
-        if ((char)b <= argv[1][i])
-            b = argv[1][i];
-    srand(b ^ 14);
-    p[3] = l[rand() & 63];
-    for (b = 0, i = 0; i < len; i++)
-        b += argv[1][i] * argv[1][i];
-    p[4] = l[(b ^ 239) & 63];
-    for (b = 0, i = 0; (char)i < argv[1][0]; i++)
-        b = rand();
-    p[5] = l[(b ^ 229) & 63];
-    printf("%s\n", p);
+
+    generate_key(argv[1], key);
+    printf("%s\n", key);
+
     return (0);
 }
