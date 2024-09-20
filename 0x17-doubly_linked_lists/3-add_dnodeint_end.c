@@ -7,38 +7,30 @@
  * @n: Integer to be set in the new node.
  * Return: Address of the new element, or NULL if it failed.
  */
+
 dlistint_t *add_dnodeint_end(dlistint_t **head, const int n)
 {
-    dlistint_t *new_node;
-    dlistint_t *current;
+	dlistint_t *new_node;
+       	dlistint_t *last_node = *head;
 
-    /* Allocate memory for the new node */
-    new_node = malloc(sizeof(dlistint_t));
-    if (new_node == NULL)
-        return (NULL);
+	new_node = malloc(sizeof(dlistint_t));
+	if (new_node == NULL)
+		return (NULL);
+	new_node->n = n;
+	new_node->next = NULL;
 
-    /* Initialize the new node */
-    new_node->n = n;
-    new_node->next = NULL;
+	if (last_node)
+	{
+		while (last_node->next)
+			last_node = last_node->next;
+		new_node->prev = last_node;
+		last_node->next = new_node;
+	}
+	else
+	{
+		*head = new_node;
+		new_node->prev = NULL;
+	}
 
-    /* If the list is empty, make the new node the head */
-    if (*head == NULL)
-    {
-        new_node->prev = NULL;
-        *head = new_node;
-        return (new_node);
-    }
-
-    /* Traverse to the last node */
-    current = *head;
-    while (current->next != NULL)
-    {
-        current = current->next;
-    }
-
-    /* Link the new node at the end */
-    current->next = new_node;
-    new_node->prev = current;
-
-    return (new_node);
+	return (new_node);
 }
