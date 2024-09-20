@@ -6,15 +6,17 @@
  *
  * Return: The number of nodes in the list.
  */
+
 size_t dlistint_len(const dlistint_t *h)
 {
+	const dlistint_t *nodes = h;
 	size_t cont = 0;
-	
-	while (h)
+
+	while (nodes)
 	{
-		h = h->next;
 		cont++;
+		nodes = nodes->next;
 	}
-	
+
 	return (cont);
 }
