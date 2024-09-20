@@ -2,46 +2,44 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_USERNAME_LENGTH 100
+/**
+ * main - Generates and prints passwords for the crackme5 executable.
+ * @argc: The number of arguments supplied to the program.
+ * @argv: An array of pointers to the arguments.
+ *
+ * Return: Always 0.
+ */
+int main(int argc, char *argv[])
+{
+	unsigned int i, b;
+	size_t len, add;
+	char *l = "A-CHRDw87lNS0E9B2TibgpnMVys5XzvtOGJcYLU+4mjW6fxqZeF3Qa1rPhdKIouk";
+	char p[7] = "      ";
 
-unsigned long hash(const char *str) {
-    unsigned long hash = 5381;
-    int c;
-
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-    return hash;
-}
-
-char generate_key_char(int index, const char *username) {
-    unsigned long username_hash = hash(username);
-    char key_char = ((username_hash ^ (index * 1337)) % 26) + 'A';
-    return key_char;
-}
-
-void generate_key(const char *username, char *key) {
-    int key_length = strlen(username) + 4;
-    for (int i = 0; i < key_length; i++) {
-        key[i] = generate_key_char(i, username);
-    }
-    key[key_length] = '\0';
-}
-
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s username\n", argv[0]);
-        return 1;
-    }
-
-    char username[MAX_USERNAME_LENGTH];
-    strncpy(username, argv[1], MAX_USERNAME_LENGTH - 1);
-    username[MAX_USERNAME_LENGTH - 1] = '\0';
-
-    char key[MAX_USERNAME_LENGTH + 5];
-    generate_key(username, key);
-
-    printf("%s\n", key);
-
-    return 0;
+	if (argc != 2)
+	{
+		printf("Correct usage: ./keygen5 username\n");
+		return (1);
+	}
+	len = strlen(argv[1]);
+	p[0] = l[(len ^ 59) & 63];
+	for (i = 0, add = 0; i < len; i++)
+		add += argv[1][i];
+	p[1] = l[(add ^ 79) & 63];
+	for (i = 0, b = 1; i < len; i++)
+		b *= argv[1][i];
+	p[2] = l[(b ^ 85) & 63];
+	for (b = argv[1][0], i = 0; i < len; i++)
+		if ((char)b <= argv[1][i])
+			b = argv[1][i];
+	srand(b ^ 14);
+	p[3] = l[rand() & 63];
+	for (b = 0, i = 0; i < len; i++)
+		b += argv[1][i] * argv[1][i];
+	p[4] = l[(b ^ 239) & 63];
+	for (b = 0, i = 0; (char)i < argv[1][0]; i++)
+		b = rand();
+	p[5] = l[(b ^ 229) & 63];
+	printf("%s\n", p);
+	return (0);
 }
