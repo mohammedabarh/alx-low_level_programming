@@ -6,16 +6,15 @@
  *
  * Return: Sum of all data, or 0 if the list is empty
  */
-
 int sum_dlistint(dlistint_t *head)
 {
-	dlistint_t *current = head;
+	dlistint_t *node = head;
 	int sum = 0;
 
-	while (current)
+	while (node)
 	{
-		sum += current->n;
-		current = current->next;
+		sum += node->n;
+		node = node->next;
 	}
 
 	return (sum);
