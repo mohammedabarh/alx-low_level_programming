@@ -1,25 +1,16 @@
 CC = gcc
 SRC = main.c school.c
+OBJ = $(SRC:.c=.o)
 NAME = school
 CFLAGS = -Wall -Werror -Wextra -pedantic
 
-all: $(NAME)
+.PHONY: all clean oclean fclean re
 
-$(NAME): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
-
+all: m.h $(OBJ)
+	$(CC) $(OBJ) -o $(NAME)
 clean:
-	@rm -f *~ $(NAME)
-
+	$(RM) *~ $(NAME)
 oclean:
-	@rm -f $(SRC:.c=.o)
-
+	$(RM) $(OBJ)
 fclean: clean oclean
-
-re: fclean all
-
-# Ensure the header file exists
-ifneq ("$(wildcard m.h)","")
-else
-$(error "Header file m.h is missing.")
-endif
+re: oclean all
