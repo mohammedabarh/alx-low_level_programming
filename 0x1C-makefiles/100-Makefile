@@ -1,0 +1,25 @@
+CC = gcc
+SRC = main.c school.c
+NAME = school
+CFLAGS = -Wall -Werror -Wextra -pedantic
+
+all: $(NAME)
+
+$(NAME): $(SRC)
+	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
+
+clean:
+	@rm -f *~ $(NAME)
+
+oclean:
+	@rm -f $(SRC:.c=.o)
+
+fclean: clean oclean
+
+re: fclean all
+
+# Ensure the header file exists
+ifneq ("$(wildcard m.h)","")
+else
+$(error "Header file m.h is missing.")
+endif
